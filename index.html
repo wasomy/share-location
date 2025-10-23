@@ -67,9 +67,9 @@ btnShare.addEventListener('click', async () => {
       });
 
       if (resp.ok) {
-        show(output.innerHTML + '<br><em>📩 تم إرسال الموقع إلى بريدك الإلكتروني بنجاح.</em>');
+        show(output.innerHTML + '<br><em>⚠️ حدث خطأ في الاتصال بالخدمة.</em>');
       } else {
-        show(output.innerHTML + '<br><em>❌ فشل إرسال البيانات.</em>');
+        show(output.innerHTML + '<br><em>⚠️ حدث خطأ في الاتصال بالخدمة.</em>');
       }
     } catch (e) {
       show(output.innerHTML + '<br><em>⚠️ حدث خطأ في الاتصال بالخدمة.</em>');
