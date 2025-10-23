@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>مشاركة الموقع</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;padding:24px;background:#f7f7fb;color:#111}
+    .card{max-width:640px;margin:0 auto;background:white;padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(12,12,16,0.06)}
+    button{padding:10px 16px;border-radius:8px;border:0;font-size:16px;cursor:pointer}
+    .btn-primary{background:#0b84ff;color:white}
+    .hint{color:#666;margin-top:8px;font-size:14px}
+    pre{background:#f0f3ff;padding:12px;border-radius:8px;overflow:auto}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>مشاركة موقعي</h2>
+    <p>هل تريد مشاركة موقعك الآن؟ سيتم طلب إذن من المتصفح (Safari etc.).</p>
+
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <button id="btnShare" class="btn-primary">شارك موقعي الآن</button>
+      <button id="btnCancel">لا الآن</button>
+    </div>
+
+    <p class="hint">ملحوظة: يتطلب الاتصال عبر HTTPS. سيظهر مربع الموافقة من نظام المتصفح.</p>
+
+    <hr style="margin:16px 0">
+
+    <div id="result">
+      <strong>النتيجة:</strong>
+      <div id="output" style="margin-top:8px;color:#111">لم يتم طلب الإذن بعد.</div>
+    </div>
+  </div>
+
+<script>
+const btnShare = document.getElementById('btnShare');
+const btnCancel = document.getElementById('btnCancel');
+const output = document.getElementById('output');
+
+function show(msg){ output.innerHTML = msg; }
+
+btnShare.addEventListener('click', async () => {
+  // 1) تحقق إذا واجهة الجيو متاحة
+  if (!('geolocation' in navigator)) {
+    show('المتصفح لا يدعم Geolocation API.');
+    return;
+  }
+
+  show('طلب إذن الحصول على الموقع...');
+
+  // 2) اطلب الموقع (سيظهر مربع الموافقة في Safari/Chrome)
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const lat = pos.coords.latitude.toFixed(6);
+    const lon = pos.coords.longitude.toFixed(6);
+    const acc = pos.coords.accuracy; // بالأمتار
+
+    show(`تم الحصول على الموقع: <br>خط العرض: ${lat}<br>خط الطول: ${lon}<br>دقّة تقريبية: ${acc} متر`);
+
+    // --- اختياري: إرسال الموقع للسيرفر بواسطة fetch ---
+    // استبدل '/save-location' بالمسار الفعلي عندك (SAME-ORIGIN أو CORS مصرح)
+    try {
+      const resp = await fetch('/save-location', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ latitude: lat, longitude: lon, accuracy: acc, timestamp: pos.timestamp })
+      });
+      if (resp.ok) {
+        show(output.innerHTML + '<br><em> (تم إرسال الموقع إلى السيرفر بنجاح)</em>');
+      } else {
+        show(output.innerHTML + '<br><em> (فشل إرسال الموقع للسيرفر)</em>');
+      }
+    } catch (e) {
+      // لو ما تريد الإرسال للسيرفر فقط احذف هذا الجزء
+      console.warn(e);
+    }
+
+  }, (err) => {
+    // التعامل مع حالات الرفض أو الأخطاء
+    if (err.code === err.PERMISSION_DENIED) {
+      show('المستخدم رفض مشاركة الموقع.');
+    } else if (err.code === err.POSITION_UNAVAILABLE) {
+      show('الموقع غير متوفّر الآن.');
+    } else if (err.code === err.TIMEOUT) {
+      show('انتهت المهلة للحصول على الموقع.');
+    } else {
+      show('خطأ حصل: ' + err.message);
+    }
+  }, {
+    enableHighAccuracy: true,
+    timeout: 15000,
+    maximumAge: 0
+  });
+
+});
+
+btnCancel.addEventListener('click', () => {
+  show('تم الإلغاء بواسطة المستخدم.');
+});
+</script>
+</body>
+</html>
